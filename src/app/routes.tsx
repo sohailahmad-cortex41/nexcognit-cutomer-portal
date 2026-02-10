@@ -7,7 +7,6 @@ import { AgentDetail } from "@/app/pages/AgentDetail";
 import { Conversations } from "@/app/pages/Conversations";
 import { ConversationDetail } from "@/app/pages/ConversationDetail";
 import { Reports } from "@/app/pages/Reports";
-import { Insights } from "@/app/pages/Insights";
 import { Settings } from "@/app/pages/Settings";
 import { Notifications } from "@/app/pages/Notifications";
 import { NotFound } from "@/app/components/NotFound";
@@ -49,10 +48,6 @@ export const router = createBrowserRouter([
       {
         path: "reports",
         element: <Reports />
-      },
-      {
-        path: "insights",
-        element: <Insights />
       },
       {
         path: "settings",

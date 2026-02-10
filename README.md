@@ -99,6 +99,33 @@ pnpm build
 
 This creates an optimized build in the `dist/` directory.
 
+### Docker Deployment
+
+The project includes Docker support for both development and production environments.
+
+**Production (Built + Nginx)**
+```bash
+# Build and run
+docker compose up --build
+
+# Access at http://localhost:8081
+```
+
+**Development (Hot Reload)**
+```bash
+# Build and run with live code reloading
+docker compose -f docker-compose.dev.yml up --build
+
+# Access at http://localhost:5173
+```
+
+**Stop containers**
+```bash
+docker compose down
+```
+
+The production setup uses a multi-stage build with Nginx, while development mounts local files for hot reload.
+
 ## 📁 Project Structure
 
 ```

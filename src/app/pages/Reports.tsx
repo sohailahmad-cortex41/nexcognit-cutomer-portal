@@ -1,33 +1,67 @@
-import { useState, useMemo } from "react";
-import { Download, FileText, Filter, Calendar, TrendingUp, PieChart as PieChartIcon } from "lucide-react";
-import { sentimentData, purposeData, outcomeData, mockConversations } from "@/app/data/mockData";
+import { useState, useEffect } from "react";
+import { Download, FileText, TrendingUp, PieChart as PieChartIcon, Calendar } from "lucide-react";
 import { PieChartComponent } from "@/app/components/charts/PieChartComponent";
-import { LineChartComponent } from "@/app/components/charts/LineChartComponent";
 import { BarChartComponent } from "@/app/components/charts/BarChartComponent";
+import { reportsApi } from "@/app/services/api";
+import type { ReportSummary, OutcomeDistribution, PurposeDistribution, SentimentDistribution } from "@/app/services/api/reports";
+import { toast } from "sonner";
 
 const SENTIMENT_COLORS = ["#10b981", "#f59e0b", "#ef4444"];
 const PURPOSE_COLORS = ["#3364eb", "#10b981", "#f59e0b", "#ef4444"];
+const OUTCOME_COLORS = ["#f59e0b", "#10b981", "#ef4444"];
 
 export function Reports() {
-  const [showFilters, setShowFilters] = useState(true);
-  const [dateRange, setDateRange] = useState("last30days");
-  const [selectedAgent, setSelectedAgent] = useState("all");
-  const [selectedChannel, setSelectedChannel] = useState("all");
-  const [selectedSentiment, setSelectedSentiment] = useState("all");
+  const [summary, setSummary] = useState<ReportSummary | null>(null);
+  const [outcomeData, setOutcomeData] = useState<OutcomeDistribution | null>(null);
+  const [purposeData, setPurposeData] = useState<PurposeDistribution | null>(null);
+  const [sentimentData, setSentimentData] = useState<SentimentDistribution | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Memoize trend data so it doesn't regenerate on every render
-  const trendData = useMemo(() => {
-    const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    return days.map((day, index) => ({
-      day,
-      conversations: Math.floor(Math.random() * 200) + 400,
-      success: Math.floor(Math.random() * 150) + 300,
-    }));
+  useEffect(() => {
+    const fetchReportsData = async () => {
+      try {
+        setIsLoading(true);
+        const [summaryData, outcome, purpose, sentiment] = await Promise.all([
+          reportsApi.getReportSummary(),
+          reportsApi.getOutcomeDistribution(),
+          reportsApi.getPurposeDistribution(),
+          reportsApi.getSentimentDistribution(),
+        ]);
+
+        setSummary(summaryData);
+        setOutcomeData(outcome);
+        setPurposeData(purpose);
+        setSentimentData(sentiment);
+      } catch (error) {
+        console.error('Failed to fetch reports data:', error);
+        toast.error('Failed to load reports data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchReportsData();
   }, []);
 
   const handleExport = (format: "csv" | "pdf") => {
-    alert(`Exporting report as ${format.toUpperCase()}... (Feature placeholder)`);
+    toast.info(`Export as ${format.toUpperCase()} - Coming soon!`);
   };
+
+  if (isLoading) {
+    return (
+      <div className="p-6 space-y-6">
+        <div className="animate-pulse">
+          <div className="h-8 bg-muted rounded w-1/3 mb-2" />
+          <div className="h-4 bg-muted rounded w-1/2" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-32 bg-card rounded-xl border border-border animate-pulse" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 space-y-6">
@@ -36,7 +70,7 @@ export function Reports() {
         <div>
           <h1 className="text-2xl font-semibold text-foreground mb-1">Reports</h1>
           <p className="text-sm text-muted-foreground">
-            Advanced analytics and data export
+            Analytics and insights from {summary?.totalAnalyzed || 0} analyzed conversations
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -57,88 +91,6 @@ export function Reports() {
         </div>
       </div>
 
-      {/* Filters */}
-      <div className="bg-card rounded-xl p-6 border border-border">
-        <button
-          onClick={() => setShowFilters(!showFilters)}
-          className="flex items-center gap-2 text-foreground hover:text-primary transition-colors mb-4"
-        >
-          <Filter className="w-4 h-4" />
-          <span className="text-sm font-medium">Advanced Filters</span>
-        </button>
-
-        {showFilters && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <label className="text-xs text-muted-foreground mb-2 block">
-                Date Range
-              </label>
-              <select
-                value={dateRange}
-                onChange={(e) => setDateRange(e.target.value)}
-                className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                <option value="today">Today</option>
-                <option value="last7days">Last 7 Days</option>
-                <option value="last30days">Last 30 Days</option>
-                <option value="last90days">Last 90 Days</option>
-                <option value="custom">Custom Range</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="text-xs text-muted-foreground mb-2 block">
-                Agent
-              </label>
-              <select
-                value={selectedAgent}
-                onChange={(e) => setSelectedAgent(e.target.value)}
-                className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                <option value="all">All Agents</option>
-                <option value="1">Sales Agent Pro</option>
-                <option value="2">BookBot Scheduler</option>
-                <option value="3">Support Assistant</option>
-                <option value="4">Restaurant Greeter</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="text-xs text-muted-foreground mb-2 block">
-                Channel
-              </label>
-              <select
-                value={selectedChannel}
-                onChange={(e) => setSelectedChannel(e.target.value)}
-                className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                <option value="all">All Channels</option>
-                <option value="web">Web</option>
-                <option value="phone">Phone</option>
-                <option value="email">Email</option>
-                <option value="chat">Chat</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="text-xs text-muted-foreground mb-2 block">
-                Sentiment
-              </label>
-              <select
-                value={selectedSentiment}
-                onChange={(e) => setSelectedSentiment(e.target.value)}
-                className="w-full px-3 py-2 bg-background border border-border rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                <option value="all">All Sentiments</option>
-                <option value="positive">Positive</option>
-                <option value="neutral">Neutral</option>
-                <option value="negative">Negative</option>
-              </select>
-            </div>
-          </div>
-        )}
-      </div>
-
       {/* Summary Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-card rounded-xl p-5 border border-border">
@@ -146,8 +98,8 @@ export function Reports() {
             <TrendingUp className="w-5 h-5 text-primary" />
             <p className="text-xs text-muted-foreground">Total Conversations</p>
           </div>
-          <p className="text-2xl font-semibold text-foreground">4,242</p>
-          <p className="text-xs text-[#10b981] mt-1">+12.5% from last period</p>
+          <p className="text-2xl font-semibold text-foreground">{summary?.totalConversations.toLocaleString() || 0}</p>
+          <p className="text-xs text-muted-foreground mt-1">{summary?.totalMessages.toLocaleString() || 0} messages</p>
         </div>
 
         <div className="bg-card rounded-xl p-5 border border-border">
@@ -155,8 +107,8 @@ export function Reports() {
             <PieChartIcon className="w-5 h-5 text-[#10b981]" />
             <p className="text-xs text-muted-foreground">Positive Sentiment</p>
           </div>
-          <p className="text-2xl font-semibold text-foreground">60%</p>
-          <p className="text-xs text-[#10b981] mt-1">+3.2% from last period</p>
+          <p className="text-2xl font-semibold text-foreground">{sentimentData?.percentages.positive || 0}%</p>
+          <p className="text-xs text-muted-foreground mt-1">{sentimentData?.distribution.positive || 0} conversations</p>
         </div>
 
         <div className="bg-card rounded-xl p-5 border border-border">
@@ -164,41 +116,17 @@ export function Reports() {
             <Calendar className="w-5 h-5 text-[#f59e0b]" />
             <p className="text-xs text-muted-foreground">Success Rate</p>
           </div>
-          <p className="text-2xl font-semibold text-foreground">84.7%</p>
-          <p className="text-xs text-[#10b981] mt-1">+2.1% from last period</p>
+          <p className="text-2xl font-semibold text-foreground">{outcomeData?.successRate || 0}%</p>
+          <p className="text-xs text-muted-foreground mt-1">{outcomeData?.distribution.success || 0} successful</p>
         </div>
 
         <div className="bg-card rounded-xl p-5 border border-border">
           <div className="flex items-center gap-3 mb-2">
-            <FileText className="w-5 h-5 text-[#ef4444]" />
+            <FileText className="w-5 h-5 text-primary" />
             <p className="text-xs text-muted-foreground">Avg Duration</p>
           </div>
-          <p className="text-2xl font-semibold text-foreground">4m 32s</p>
-          <p className="text-xs text-[#ef4444] mt-1">+8.3% from last period</p>
-        </div>
-      </div>
-
-      {/* Trend Chart */}
-      <div className="bg-card rounded-xl p-6 border border-border">
-        <h2 className="text-lg font-semibold text-foreground mb-6">
-          Conversation Trends
-        </h2>
-        <div className="w-full overflow-x-auto" style={{ minHeight: 300 }}>
-          <LineChartComponent
-            labels={trendData.map(d => d.day)}
-            datasets={[
-              {
-                label: "Total Conversations",
-                data: trendData.map(d => d.conversations),
-                color: "#3364eb",
-              },
-              {
-                label: "Successful",
-                data: trendData.map(d => d.success),
-                color: "#10b981",
-              },
-            ]}
-          />
+          <p className="text-2xl font-semibold text-foreground">{summary?.avgDuration || '0m'}</p>
+          <p className="text-xs text-muted-foreground mt-1">per conversation</p>
         </div>
       </div>
 
@@ -210,13 +138,16 @@ export function Reports() {
             Sentiment Distribution
           </h2>
           <div className="w-full" style={{ minHeight: 250 }}>
-            <PieChartComponent
-              data={sentimentData.map((item, index) => ({
-                name: item.name,
-                value: item.value,
-                color: SENTIMENT_COLORS[index],
-              }))}
-            />
+            {sentimentData && (
+              <PieChartComponent
+                data={[
+                  { name: 'Positive', value: sentimentData.distribution.positive || 0, color: SENTIMENT_COLORS[0] },
+                  { name: 'Neutral', value: sentimentData.distribution.neutral || 0, color: SENTIMENT_COLORS[1] },
+                  { name: 'Negative', value: sentimentData.distribution.negative || 0, color: SENTIMENT_COLORS[2] },
+                ].filter(item => item.value > 0)}
+                percentages={sentimentData.percentages}
+              />
+            )}
           </div>
         </div>
 
@@ -226,17 +157,19 @@ export function Reports() {
             Purpose Distribution
           </h2>
           <div className="w-full" style={{ minHeight: 250 }}>
-            <BarChartComponent
-              labels={purposeData.map(d => d.name)}
-              datasets={[
-                {
-                  label: "Purpose",
-                  data: purposeData.map(d => d.value),
-                  color: "#3364eb",
-                },
-              ]}
-              showLegend={false}
-            />
+            {purposeData && Object.keys(purposeData.distribution).length > 0 && (
+              <BarChartComponent
+                labels={Object.keys(purposeData.distribution).map(key => key.charAt(0).toUpperCase() + key.slice(1))}
+                datasets={[
+                  {
+                    label: "Conversations",
+                    data: Object.values(purposeData.distribution),
+                    color: "#3364eb",
+                  },
+                ]}
+                showLegend={false}
+              />
+            )}
           </div>
         </div>
 
@@ -246,93 +179,36 @@ export function Reports() {
             Outcome Distribution
           </h2>
           <div className="w-full" style={{ minHeight: 250 }}>
-            <PieChartComponent
-              data={outcomeData.map((item, index) => ({
-                name: item.name,
-                value: item.value,
-                color: PURPOSE_COLORS[index],
-              }))}
-            />
+            {outcomeData && (
+              <PieChartComponent
+                data={[
+                  { name: 'Pending', value: outcomeData.distribution.pending || 0, color: OUTCOME_COLORS[0] },
+                  { name: 'Success', value: outcomeData.distribution.success || 0, color: OUTCOME_COLORS[1] },
+                  { name: 'Failed', value: outcomeData.distribution.failed || 0, color: OUTCOME_COLORS[2] },
+                ].filter(item => item.value > 0)}
+                percentages={outcomeData.percentages}
+              />
+            )}
           </div>
         </div>
       </div>
 
-      {/* Tabular Report */}
-      <div className="bg-card rounded-xl p-6 border border-border">
-        <h2 className="text-lg font-semibold text-foreground mb-6">
-          Detailed Report
-        </h2>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="text-left text-xs text-muted-foreground font-medium py-3 px-4">
-                  Customer
-                </th>
-                <th className="text-left text-xs text-muted-foreground font-medium py-3 px-4">
-                  Agent
-                </th>
-                <th className="text-left text-xs text-muted-foreground font-medium py-3 px-4">
-                  Purpose
-                </th>
-                <th className="text-left text-xs text-muted-foreground font-medium py-3 px-4">
-                  Sentiment
-                </th>
-                <th className="text-left text-xs text-muted-foreground font-medium py-3 px-4">
-                  Outcome
-                </th>
-                <th className="text-left text-xs text-muted-foreground font-medium py-3 px-4">
-                  Duration
-                </th>
-                <th className="text-left text-xs text-muted-foreground font-medium py-3 px-4">
-                  Date
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {mockConversations.slice(0, 10).map((conv) => (
-                <tr key={conv.id} className="border-b border-border hover:bg-muted/30">
-                  <td className="text-sm text-foreground py-3 px-4">{conv.customerName}</td>
-                  <td className="text-sm text-muted-foreground py-3 px-4">
-                    {conv.agentName}
-                  </td>
-                  <td className="text-sm text-foreground py-3 px-4 capitalize">
-                    {conv.purpose}
-                  </td>
-                  <td className="py-3 px-4">
-                    <span
-                      className={`text-xs px-2 py-1 rounded-full ${
-                        conv.sentiment === "positive"
-                          ? "bg-[#10b981]/10 text-[#10b981]"
-                          : conv.sentiment === "negative"
-                          ? "bg-[#ef4444]/10 text-[#ef4444]"
-                          : "bg-[#f59e0b]/10 text-[#f59e0b]"
-                      }`}
-                    >
-                      {conv.sentiment}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4">
-                    <span
-                      className={`text-xs px-2 py-1 rounded-full ${
-                        conv.outcome === "success"
-                          ? "bg-[#10b981]/10 text-[#10b981]"
-                          : conv.outcome === "failed"
-                          ? "bg-[#ef4444]/10 text-[#ef4444]"
-                          : "bg-[#f59e0b]/10 text-[#f59e0b]"
-                      }`}
-                    >
-                      {conv.outcome}
-                    </span>
-                  </td>
-                  <td className="text-sm text-foreground py-3 px-4">{conv.duration}</td>
-                  <td className="text-sm text-muted-foreground py-3 px-4">
-                    {new Date(conv.timestamp).toLocaleDateString()}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* Activity Breakdown */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-card rounded-xl p-6 border border-border">
+          <p className="text-sm text-muted-foreground mb-2">Active Today</p>
+          <p className="text-3xl font-semibold text-foreground">{summary?.activeToday || 0}</p>
+          <p className="text-xs text-muted-foreground mt-2">conversations today</p>
+        </div>
+        <div className="bg-card rounded-xl p-6 border border-border">
+          <p className="text-sm text-muted-foreground mb-2">Active This Week</p>
+          <p className="text-3xl font-semibold text-foreground">{summary?.activeThisWeek || 0}</p>
+          <p className="text-xs text-muted-foreground mt-2">conversations this week</p>
+        </div>
+        <div className="bg-card rounded-xl p-6 border border-border">
+          <p className="text-sm text-muted-foreground mb-2">Active This Month</p>
+          <p className="text-3xl font-semibold text-foreground">{summary?.activeThisMonth || 0}</p>
+          <p className="text-xs text-muted-foreground mt-2">conversations this month</p>
         </div>
       </div>
     </div>

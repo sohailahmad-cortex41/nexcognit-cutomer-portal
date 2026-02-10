@@ -12,7 +12,6 @@ export * as dashboardApi from './dashboard';
 export * as agentsApi from './agents';
 export * as conversationsApi from './conversations';
 export * as reportsApi from './reports';
-export * as insightsApi from './insights';
 export * as notificationsApi from './notifications';
 export * as settingsApi from './settings';
 

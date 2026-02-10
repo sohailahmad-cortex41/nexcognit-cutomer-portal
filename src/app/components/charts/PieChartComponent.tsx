@@ -44,6 +44,7 @@ export function PieChartComponent({ data, showLegend = true, showLabels = true, 
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    cutout: '65%', // This converts the pie chart to a donut chart
     plugins: {
       legend: {
         display: showLegend,

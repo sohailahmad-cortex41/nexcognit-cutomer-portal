@@ -24,11 +24,9 @@ const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard },
   { path: "/agents", label: "Agents", icon: Bot },
   { path: "/conversations", label: "Conversations", icon: MessageSquare },
-
+  { path: "/reports", label: "Reports", icon: FileText },
 ];
 
-// { path: "/reports", label: "Reports", icon: FileText },
-// { path: "/insights", label: "Insights", icon: Lightbulb },
 
 export function Layout() {
   const location = useLocation();
