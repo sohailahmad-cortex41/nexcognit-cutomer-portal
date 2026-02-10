@@ -90,7 +90,7 @@ export function Login() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="owner@goldmaster.com"
+                  placeholder="you@example.com"
                   required
                   className="w-full pl-10 pr-4 py-3 bg-[#0f1729] border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
