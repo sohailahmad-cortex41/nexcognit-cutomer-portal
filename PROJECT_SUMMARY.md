@@ -1,4 +1,4 @@
-# NextCognit Customer Portal - Project Summary
+# NexCognit Customer Portal - Project Summary
 
 ## Overview
 A comprehensive B2B SaaS Customer Portal for managing and analyzing AI Chat Agents. Built with React, TypeScript, React Router, Recharts, and Tailwind CSS.
@@ -99,7 +99,7 @@ A comprehensive B2B SaaS Customer Portal for managing and analyzing AI Chat Agen
 - **Sidebar Navigation:**
   - Dashboard, Agents, Conversations, Reports, Insights
   - Active state highlighting
-  - NextCognit branding
+  - NexCognit branding
   - User profile section
 - **Top Bar:**
   - Current date/time display
@@ -245,7 +245,7 @@ interface Insight {
 **Request:**
 ```json
 {
-  "email": "admin@nextcognit.com",
+  "email": "admin@nexcognit.com",
   "password": "password123"
 }
 ```
@@ -256,7 +256,7 @@ interface Insight {
   "user": {
     "id": "user_123",
     "name": "Admin User",
-    "email": "admin@nextcognit.com",
+    "email": "admin@nexcognit.com",
     "role": "admin",
     "organizationId": "org_456"
   }
@@ -284,7 +284,7 @@ interface Insight {
 {
   "id": "user_123",
   "name": "Admin User",
-  "email": "admin@nextcognit.com",
+  "email": "admin@nexcognit.com",
   "role": "admin",
   "organizationId": "org_456"
 }
@@ -970,14 +970,14 @@ CREATE TABLE insights (
 
 ### Frontend Environment Variables
 ```env
-VITE_API_BASE_URL=https://api.nextcognit.com
-VITE_WS_URL=wss://api.nextcognit.com/ws
+VITE_API_BASE_URL=https://api.nexcognit.com
+VITE_WS_URL=wss://api.nexcognit.com/ws
 VITE_APP_VERSION=1.0.0
 ```
 
 ### Backend Environment Variables (Examples)
 ```env
-DATABASE_URL=postgresql://user:password@localhost:5432/nextcognit
+DATABASE_URL=postgresql://user:password@localhost:5432/nexcognit
 REDIS_URL=redis://localhost:6379
 JWT_SECRET=your_jwt_secret_key
 JWT_EXPIRY=30m
@@ -1142,4 +1142,4 @@ Consider supporting webhooks for:
 
 **Document Version**: 1.0  
 **Last Updated**: February 2, 2026  
-**Contact**: Frontend Team @ NextCognit
+**Contact**: Frontend Team @ NexCognit

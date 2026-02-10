@@ -73,7 +73,7 @@ export function Layout() {
             {isCollapsed ? (
               <div className="flex flex-col items-center gap-3">
                 <div className="w-10 h-10 shrink-0">
-                  <img src={logoImage} alt="NextCognit Logo" className="w-full h-full object-contain" />
+                  <img src={logoImage} alt="NexCognit Logo" className="w-full h-full object-contain" />
                 </div>
                 <button
                   onClick={() => setIsCollapsed(!isCollapsed)}
@@ -87,10 +87,10 @@ export function Layout() {
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 shrink-0">
-                    <img src={logoImage} alt="NextCognit Logo" className="w-full h-full object-contain" />
+                    <img src={logoImage} alt="NexCognit Logo" className="w-full h-full object-contain" />
                   </div>
                   <div>
-                    <h1 className="text-base text-foreground font-semibold">NextCognit</h1>
+                    <h1 className="text-base text-foreground font-semibold">NexCognit</h1>
                     <p className="text-xs text-muted-foreground">Customer Portal</p>
                   </div>
                 </div>

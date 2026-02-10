@@ -1,4 +1,4 @@
-# NextCognit Customer Portal
+# NexCognit Customer Portal
 
 A modern customer portal application built with React, TypeScript, and Vite. This application provides a comprehensive dashboard for managing agents, conversations, insights, and reports with real-time data visualization.
 
@@ -51,7 +51,7 @@ A modern customer portal application built with React, TypeScript, and Vite. Thi
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd NextCognit_Customer_Portal
+   cd NexCognit_Customer_Portal
    ```
 
 2. **Install dependencies**
