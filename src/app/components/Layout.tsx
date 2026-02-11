@@ -18,7 +18,7 @@ import { useState } from "react";
 import { useAuth } from "@/app/context/AuthContext";
 import { useAgent } from "@/app/context/AgentContext";
 import { toast } from "sonner";
-import logoImage from "../../assets/5005960e021232f9e7021db0c228553d8327784d.png";
+import logoImage from "../../assets/logo.png";
 
 const navItems = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -73,7 +73,7 @@ export function Layout() {
             {isCollapsed ? (
               <div className="flex flex-col items-center gap-3">
                 <div className="w-10 h-10 shrink-0">
-                  <img src={logoImage} alt="NexCognit Logo" className="w-full h-full object-contain" />
+                  <img src={logoImage} alt="Nexcognit Logo" className="w-full h-full object-contain" />
                 </div>
                 <button
                   onClick={() => setIsCollapsed(!isCollapsed)}
@@ -87,10 +87,10 @@ export function Layout() {
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 shrink-0">
-                    <img src={logoImage} alt="NexCognit Logo" className="w-full h-full object-contain" />
+                    <img src={logoImage} alt="Nexcognit Logo" className="w-full h-full object-contain" />
                   </div>
                   <div>
-                    <h1 className="text-base text-foreground font-semibold">NexCognit</h1>
+                    <h1 className="text-base text-foreground font-semibold">Nexcognit</h1>
                     <p className="text-xs text-muted-foreground">Customer Portal</p>
                   </div>
                 </div>

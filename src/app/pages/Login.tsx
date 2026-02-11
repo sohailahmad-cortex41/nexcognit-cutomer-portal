@@ -27,7 +27,7 @@ export function Login() {
     try {
       await login({ email, password });
       toast.success("Login successful!", {
-        description: "Welcome back to NexCognit Customer Portal",
+        description: "Welcome back to Nexcognit Customer Portal",
       });
       navigate("/");
     } catch (err: any) {
@@ -67,7 +67,7 @@ export function Login() {
             <Lock className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">
-            NexCognit Customer Portal
+            Nexcognit Customer Portal
           </h1>
           <p className="text-gray-400">
             Sign in to manage your AI Chat Agents
@@ -164,7 +164,7 @@ export function Login() {
 
         {/* Footer */}
         <p className="text-center text-sm text-gray-500 mt-6">
-          © 2026 NexCognit. All rights reserved.
+          © 2026 Nexcognit. All rights reserved.
         </p>
       </div>
     </div>

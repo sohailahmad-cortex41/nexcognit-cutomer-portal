@@ -1,4 +1,4 @@
-# NexCognit Customer Portal - Project Summary
+# Nexcognit Customer Portal - Project Summary
 
 ## Overview
 A comprehensive B2B SaaS Customer Portal for managing and analyzing AI Chat Agents. Built with React, TypeScript, React Router, Recharts, and Tailwind CSS.
@@ -99,7 +99,7 @@ A comprehensive B2B SaaS Customer Portal for managing and analyzing AI Chat Agen
 - **Sidebar Navigation:**
   - Dashboard, Agents, Conversations, Reports, Insights
   - Active state highlighting
-  - NexCognit branding
+  - Nexcognit branding
   - User profile section
 - **Top Bar:**
   - Current date/time display
@@ -1142,4 +1142,4 @@ Consider supporting webhooks for:
 
 **Document Version**: 1.0  
 **Last Updated**: February 2, 2026  
-**Contact**: Frontend Team @ NexCognit
+**Contact**: Frontend Team @ Nexcognit
